@@ -6,7 +6,7 @@ doc_to_text: "{{text}}"
 generation_kwargs:
   do_sample: false
   temperature: 0
-  max_gen_toks: 5
+  max_gen_toks: 128
 fewshot_split: test
 should_decontaminate: true
 doc_to_decontamination_query: "{{text}}"

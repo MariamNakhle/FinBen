@@ -10,7 +10,7 @@ doc_to_decontamination_query: "{{text}}"
 generation_kwargs:
   do_sample: false
   temperature: 0.0
-  max_gen_toks: 512
+  max_gen_toks: 128
 metric_list:
   - metric: !function reg_utils.acc
     aggregation: !function reg_utils.acc_agg

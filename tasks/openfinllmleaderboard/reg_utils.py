@@ -19,7 +19,8 @@ from sklearn.metrics import f1_score, mean_squared_error
 # FPB FiQA-SA
 def acc(items):
     return items
-
+    
+# FPB FiQA-SA
 def acc_agg(items):
     return sum(items) / len(items)
 
@@ -28,31 +29,56 @@ def f1(items, references=None):
     from lm_eval.api.task import TaskManager
     task = TaskManager.get_current_task()
     golds = [doc["gold"] for doc in task.dataset["test"]]
-    preds = [pred for pred in items]  # 假设items是预测的类别索引
+    preds = [pred for pred in items]
     return list(zip(golds, preds))
 
+# FPB FiQA-SA
 def f1_agg(items):
     golds, preds = zip(*items)
     return f1_score(golds, preds, average="macro")
 
 
 # TSA
+NUM_PATTERN = re.compile(r"-?\d+\.?\d*")
 def rmse(references, predictions):
     items = []
-    for gold, pred_text in zip(references, predictions):
+    for gold_str, pred_text in zip(references, predictions):
         try:
-            pred = float(re.findall(r"-?\d+\.?\d*", pred_text)[0])
-            pred = np.clip(pred, -1.0, 1.0)
-        except (IndexError, ValueError):
-            pred = None
-        items.append((gold, pred))
-    return items
+            gold = float(gold_str)
+        except ValueError:
+            gold = 0.0
+        
+        pred = None
+        try:
+            match = NUM_PATTERN.search(str(pred_text))
+            if match:
+                pred = float(match.group())
+                pred = np.clip(pred, -1.0, 1.0)
+        except (ValueError, TypeError):
+            pass
+        
 
+        items.append( (gold, pred) )  
+    return items  # List[Tuple[float, Optional[float]]]
+    
 # TSA
 def rmse_agg(items):
-    valid_pairs = [(g, p) for g, p in items if p is not None]
+    flattened = []
+    for item in items:
+        if isinstance(item, list): 
+            flattened.extend(item)
+        else:
+            flattened.append(item)
+    
+
+    if not all(isinstance(it, tuple) and len(it)==2 for it in flattened):
+        bad_sample = next((it for it in flattened if not isinstance(it, tuple)), None)
+        raise ValueError(f"Invalid item format. Sample: {bad_sample}")
+    
+    valid_pairs = [it for it in flattened if it[1] is not None]
     if not valid_pairs:
         return float("inf")
+    
     golds, preds = zip(*valid_pairs)
     return np.sqrt(mean_squared_error(golds, preds))
 
@@ -61,6 +87,7 @@ def missing_rate(references, predictions):
     missing_count = sum(1 for pred in predictions if pred is None)
     return missing_count / len(predictions)
 
+# TSA
 def missing_rate_agg(items):
     return sum(items) / len(items)
 
