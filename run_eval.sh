@@ -4,13 +4,13 @@ set -e
 
 # Run the Hugging Face LLM evaluation command
 lm_eval --model hf \
-        --model_args "pretrained=Qwen/Qwen2.5-0.5B" \
-        --tasks regXBRL_Tag \
-        --num_fewshot 5 \
+        --model_args "pretrained=deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B" \
+        --tasks Leaderboard_TSA \
+        --num_fewshot 0 \
         --device cuda:1 \
         --batch_size 8 \
-        --output_path results/tag \
-        --hf_hub_log_args "hub_results_org=TheFinAI,details_repo_name=lm-eval-llama-regulationXBRLTag-5shot-result,push_results_to_hub=True,push_samples_to_hub=True,public_repo=False" \
+        --output_path results/Leaderboard \
+        --hf_hub_log_args "hub_results_org=TheFinAI,details_repo_name=lm-eval-llama-regulationXBRLTag-5shot-result,push_results_to_hub=False,push_samples_to_hub=False,public_repo=False" \
         --log_samples \
         --include_path ./tasks
         #--apply_chat_template \

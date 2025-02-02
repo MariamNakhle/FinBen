@@ -1,0 +1,27 @@
+dataset_name: default
+dataset_path: ChanceFocus/flare-tsa
+output_type: generate_until
+doc_to_target: "{{answer}}"
+doc_to_text: "{{text}}"
+generation_kwargs:
+  do_sample: false
+  temperature: 0
+  max_gen_toks: 5
+fewshot_split: test
+should_decontaminate: true
+doc_to_decontamination_query: "{{text}}"
+metric_list:
+  - metric: !function reg_utils.rmse
+    aggregation: !function reg_utils.rmse_agg
+    higher_is_better: false
+  - metric: !function reg_utils.missing_rate
+    aggregation: !function reg_utils.missing_rate_agg
+    higher_is_better: false
+metadata:
+  version: '1.0'
+  value_range: [-1.0, 1.0]
+  task_type: "regression"
+task: Leaderboard_TSA
+tag: OpenFinLLM-Leaderboard
+test_split: test
+training_split: null
