@@ -1,34 +1,21 @@
-## create your project fork from https://github.com/The-FinAI/FinBen
-
-## github repo clone
+## setup environment
 ```bash
 git clone https://github.com/Yan2266336/FinBen.git --recursive
-```
-
-## set environment
-```bash
 conda create -n finben python=3.12
 conda activate finben
-```
 
-```bash
 cd FinBen/finlm_eval/
 pip install -e .
 pip install -e .[vllm]
-```
 
-## login to your huggingface
-```bash
+# Login to your Huggingface
 export HF_TOKEN="your_hf_token"
-```
-## verify it
-```bash
 echo $HF_TOKEN
 ```
 
 ## model evaluation
 ```bash
-cd FinBen/
+./run_eval.sh
 ```
 ### for GPT model
 ```bash
@@ -93,38 +80,8 @@ lm_eval --model vllm \
 ## add new task
 ```bash
 cd FinBen/tasks/your_project_folder/ # create yaml file for new task
-```
+# Modify reg_utils.py to include metrics functions 
 
-### For example
-```bash
-cd FinBen/tasks/fortune/ # create yaml file for new task
-```
 - **lm-evaluation-harness/docs/task_guide.md** # Good Reference Tasks
-
-
-## if push to leaderboard
-```bash
-vim FinBen/aggregate.py  #change to your project huggingface repos in line 415 and 42
 ```
 
-## new model
-```bash
-vim FinBen/aggregate.py # add new model configuration to MODEL_DICT
-
-python aggregate.py
-```
-**https://huggingface.co/spaces/open-llm-leaderboard/open_llm_leaderboard#/?search=qwen2.5-1.5b-instruct**
-**https://mot.isitopen.ai/**
-
-## new task
-```bash
-vim FinBen/aggregate.py ##add new task to METRIC_DICT # for classification task, change 1.0 / 6.0 to your baseline
-
-python aggregate.py
-```
-### huggingface leaderboard part
-#### backend/app/services/leaderboard.py
-#### frontend/src/pages/LeaderboardPage/components/Leaderboard/utils/columnUtils.js
-#### frontend/src/pages/LeaderboardPage/components/Leaderboard/constants/tooltips.js
-#### frontend/src/pages/LeaderboardPage/components/Leaderboard/constants/defaults.js
-#### frontend/src/pages/QuotePage/QuotePage.js
