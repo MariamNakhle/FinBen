@@ -1,0 +1,28 @@
+task: Dolfin
+tag: OpenFinLLM-Leaderboard
+
+dataset_name: null
+dataset_path: LinguaCustodia/dolfin
+dataset_kwargs: null
+test_split: test
+
+output_type: generate_until
+
+doc_to_text: !function utils.dolfin_doc_to_text
+doc_to_target: "{{source_text}}_*dolfin-sep*_{{target_text}}_*dolfin-sep*_{{src_lang}}_*dolfin-sep*_{{trg_lang}}"
+
+metric_list:
+  - metric: !function metrics.comet
+    aggregation: !function metrics.agg_comet
+    higher_is_better: true
+    batch_size: 8
+  - metric: !function metrics.comet_slide
+    aggregation: !function metrics.agg_comet_slide
+    higher_is_better: true
+    batch_size: 8
+  - metric: !function metrics.bleu
+    aggregation: !function metrics.agg_bleu
+    higher_is_better: true
+
+metadata:
+  version: '1.0'
